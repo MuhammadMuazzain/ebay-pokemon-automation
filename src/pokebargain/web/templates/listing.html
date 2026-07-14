@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}{{ listing.card_name or listing.title }} · PokéBargain{% endblock %}
+{% block content %}
+<article class="detail">
+  <div class="media">
+    {% if listing.card_image_url or listing.image_url %}
+    <img src="{{ listing.card_image_url or listing.image_url }}" alt="" />
+    {% endif %}
+  </div>
+  <div class="info">
+    <p class="score-lg">Score {{ "%.0f"|format(listing.opportunity_score or 0) }}</p>
+    <h1>{{ listing.card_name or "Unidentified" }}</h1>
+    <p>{{ listing.set_name }} {% if listing.card_number %}#{{ listing.card_number }}{% endif %}</p>
+    <p class="ebay-title">Listing: {{ listing.title }}</p>
+    <dl class="metrics wide">
+      <div><dt>eBay price</dt><dd>£{{ "%.2f"|format(listing.price) }} {{ listing.currency }}</dd></div>
+      <div><dt>Market value</dt><dd>{% if listing.market_value %}£{{ "%.2f"|format(listing.market_value) }}{% else %}—{% endif %}</dd></div>
+      <div><dt>Discount</dt><dd>{% if listing.discount_pct is not none %}{{ "%.1f"|format(listing.discount_pct) }}% (£{{ "%.2f"|format(listing.discount_amount or 0) }}){% else %}—{% endif %}</dd></div>
+      <div><dt>Potential profit</dt><dd>{% if listing.potential_profit %}£{{ "%.2f"|format(listing.potential_profit) }}{% else %}—{% endif %}</dd></div>
+      <div><dt>Match</dt><dd>{{ listing.match_method }} @ {{ listing.match_confidence }}%</dd></div>
+      <div><dt>Title quality</dt><dd>{{ listing.title_quality }}</dd></div>
+      <div><dt>Found</dt><dd>{{ listing.found_at }}</dd></div>
+    </dl>
+    {% if listing.score_breakdown %}
+    <h2>Score breakdown</h2>
+    <pre>{{ listing.score_breakdown | tojson(indent=2) }}</pre>
+    {% endif %}
+    {% if listing.listing_url %}
+    <a class="btn" href="{{ listing.listing_url }}" target="_blank" rel="noopener">View eBay listing</a>
+    {% endif %}
+    <p><a href="/">← Back to dashboard</a></p>
+  </div>
+</article>
+{% endblock %}

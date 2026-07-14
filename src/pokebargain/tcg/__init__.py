@@ -1,0 +1,1 @@
+"""Pokémon TCG API package."""

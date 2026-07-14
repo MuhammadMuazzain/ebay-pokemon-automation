@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}PokéBargain{% endblock %}</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <a href="/">PokéBargain</a>
+      <span class="tag">eBay UK · Hidden bargains</span>
+    </div>
+    <nav>
+      <a href="/?sort=score">Score</a>
+      <a href="/?sort=discount">Discount</a>
+      <a href="/?sort=profit">Profit</a>
+      <a href="/?sort=newest">Newest</a>
+      <form action="/scan" method="post" class="inline">
+        <button type="submit">Run scan</button>
+      </form>
+    </nav>
+  </header>
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+  <footer>
+    Built by Muhammad Muazzain · FastAPI · eBay Browse · Pokémon TCG API · OpenAI Vision
+  </footer>
+</body>
+</html>

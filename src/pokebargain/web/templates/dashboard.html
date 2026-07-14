@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · PokéBargain{% endblock %}
+{% block content %}
+<section class="hero-panel">
+  <h1>Hidden opportunity board</h1>
+  <p>
+    Ranked singles on eBay UK where poor titles, misspellings, or vague listings
+    hide undervalued cards. Minimum score: {{ min_score }}.
+  </p>
+</section>
+
+{% if scans %}
+<section class="meta">
+  <h2>Recent scans</h2>
+  <ul>
+    {% for s in scans %}
+    <li>
+      {{ s.started_at }} — {{ s.status }} · fetched {{ s.listings_fetched }},
+      new {{ s.listings_new }}, scored {{ s.listings_scored }},
+      vision {{ s.vision_calls }}
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+
+<section class="grid">
+  {% if not opportunities %}
+  <p class="empty">
+    No opportunities yet. Configure API keys, run <code>pokebargain scan</code>,
+    or <code>pokebargain seed-demo</code> for sample rows.
+  </p>
+  {% endif %}
+  {% for row in opportunities %}
+  <article class="deal">
+    <a href="/listings/{{ row.id }}" class="thumb">
+      {% if row.card_image_url or row.image_url %}
+      <img src="{{ row.card_image_url or row.image_url }}" alt="{{ row.card_name or row.title }}" />
+      {% endif %}
+    </a>
+    <div class="body">
+      <div class="score" title="Hidden Opportunity Score">{{ "%.0f"|format(row.opportunity_score or 0) }}</div>
+      <h3><a href="/listings/{{ row.id }}">{{ row.card_name or "Unknown card" }}</a></h3>
+      <p class="set">{{ row.set_name or "" }}{% if row.card_number %} · #{{ row.card_number }}{% endif %}</p>
+      <p class="ebay-title">{{ row.title }}</p>
+      <dl class="metrics">
+        <div><dt>eBay</dt><dd>£{{ "%.2f"|format(row.price) }}</dd></div>
+        <div><dt>Market</dt><dd>{% if row.market_value %}£{{ "%.2f"|format(row.market_value) }}{% else %}—{% endif %}</dd></div>
+        <div><dt>Discount</dt><dd>{% if row.discount_pct is not none %}{{ "%.0f"|format(row.discount_pct) }}%{% else %}—{% endif %}</dd></div>
+        <div><dt>Profit</dt><dd>{% if row.potential_profit %}£{{ "%.2f"|format(row.potential_profit) }}{% else %}—{% endif %}</dd></div>
+      </dl>
+      <div class="actions">
+        {% if row.listing_url %}
+        <a class="btn" href="{{ row.listing_url }}" target="_blank" rel="noopener">Open on eBay</a>
+        {% endif %}
+        <span class="chip">{{ row.match_method or "—" }} · {{ row.found_at }}</span>
+      </div>
+    </div>
+  </article>
+  {% endfor %}
+</section>
+{% endblock %}
